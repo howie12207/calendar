@@ -1,0 +1,274 @@
+* {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+[v-cloak] {
+  display: none;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  /* ============ 現在 ============ */
+  > .now {
+    position: relative;
+    align-self: flex-start;
+  }
+  > .now:after {
+    content: "";
+    opacity: 0;
+    transition: opacity 1s;
+  }
+  > .now:hover:after {
+    content: "現在時間";
+    position: absolute;
+    opacity: 1;
+    bottom: -24px;
+    left: 20px;
+    font-size: 12px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 6px 10px;
+  }
+  /* ============ 當前 ============ */
+  > .calendar {
+    > .week {
+      display: flex;
+      font-size: 0;
+      border-top: 1px solid #eee;
+      margin: 16px 0 0;
+      padding: 8px 0 0;
+      > li {
+        font-size: 1rem;
+        flex: 1 1 0%;
+        text-align: center;
+      }
+    }
+    > .month {
+      margin: 0 0 20px;
+      text-align: center;
+      > span {
+        position: relative;
+        margin: 0 16px 0 0;
+      }
+      > button {
+        margin: 0 0 0 4px;
+        background-color: white;
+        border: 1px solid #eee;
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
+      > button:hover {
+        background-color: #afc7fa;
+        cursor: pointer;
+      }
+      /* --- 前後年月按鈕 --- */
+      .btn {
+        text-decoration: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        transform: translateX(-5px);
+        font-size: 12px;
+        transition: 0.3s;
+      }
+      .lastBtn {
+        top: -18px;
+      }
+      .nextBtn {
+        bottom: -21px;
+      }
+      .btn:before {
+        content: "";
+        opacity: 0;
+        transition: opacity 1s;
+      }
+      span:nth-of-type(1) {
+        > .lastBtn:hover:before {
+          content: "上一年";
+          position: absolute;
+          top: 24px;
+          left: 0;
+          opacity: 1;
+          font-size: 12px;
+          width: 56px;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: white;
+          padding: 6px 0;
+        }
+        > .nextBtn:hover:before {
+          content: "下一年";
+          position: absolute;
+          top: 24px;
+          left: 0;
+          opacity: 1;
+          font-size: 12px;
+          width: 56px;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: white;
+          padding: 6px 0;
+        }
+      }
+      span:nth-of-type(2) {
+        > .lastBtn:hover:before {
+          content: "上個月";
+          position: absolute;
+          top: 24px;
+          left: 0;
+          opacity: 1;
+          font-size: 12px;
+          width: 56px;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: white;
+          padding: 6px 0;
+        }
+        > .nextBtn:hover:before {
+          content: "下個月";
+          position: absolute;
+          top: 24px;
+          left: 0;
+          opacity: 1;
+          font-size: 12px;
+          width: 56px;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: white;
+          padding: 6px 0;
+        }
+      }
+    }
+    > .dateblock {
+      display: flex;
+      .date {
+        flex: 1 1 0%;
+        height: 120px;
+        overflow: auto;
+        text-align: center;
+        border-right: 1px solid brown;
+        border-bottom: 1px solid brown;
+        > .num {
+          display: inline-block;
+          padding: 4px 8px;
+        }
+        /* --- 代辦事項標題 --- */
+        > .title {
+          margin: 4px 0 0;
+          position: relative;
+          a {
+            text-align: left;
+            display: block;
+            text-decoration: none;
+            color: white;
+            margin: 0 0 2px;
+            padding: 0 6px;
+            font-size: 14px;
+            line-height: 20px;
+            background-color: green;
+            border-radius: 4px;
+          }
+        }
+        > .title:hover {
+          color: #ccc;
+        }
+      }
+      .date:nth-child(1) {
+        border-left: 1px solid brown;
+      }
+      .today {
+        > .num {
+          display: inline-block;
+          border-radius: 50%;
+          background-color: #1967d2;
+          color: white;
+        }
+      }
+      .others {
+        background-color: #ddd;
+        > .num,
+        .title {
+          opacity: 0.5;
+        }
+      }
+    }
+    > .dateblock:nth-child(3) > .date {
+      border-top: 1px solid brown;
+    }
+  }
+}
+/* ============ 編輯模型 ============ */
+.editModal {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.4);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > .container {
+    position: relative;
+    width: 280px;
+    height: 240px;
+    background-color: #fff;
+    box-shadow: 0 0 16px black;
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    /* --- 關閉按鈕 --- */
+    > .closeBtn {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      color: #5f6368;
+      display: block;
+      padding: 8px 12px;
+      border-radius: 50%;
+    }
+    > .closeBtn:hover {
+      background-color: #f6f6f6;
+    }
+    /* --- 標題 --- */
+    > .inputTitle {
+      border: none;
+      margin: 0 0 40px;
+      border-bottom: 1px solid #ccc;
+      font-size: 24px;
+      width: 220px;
+      line-height: 36px;
+      outline: none;
+      transition: 0.4s;
+    }
+    > .inputTitle:focus {
+      border-bottom: 1px solid brown;
+    }
+    /* --- 日期 --- */
+    > .date {
+      margin: 0 0 auto;
+      width: 220px;
+      font-size: 18px;
+    }
+    /* --- 按鈕 --- */
+    > .btn {
+      align-self: flex-end;
+      > .submitBtn,
+      > .delBtn {
+        color: white;
+        text-decoration: none;
+        padding: 8px 12px;
+        background-color: brown;
+      }
+      > .delBtn {
+        background-color: red;
+      }
+      > .submitBtn {
+        background-color: green;
+      }
+      > .submitBtn:hover,
+      > .delBtn:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
+    />
+    <link rel="stylesheet" href="./dist/style/all.min.css" />
+    <title>萬年曆 by Vue</title>
+  </head>
+  <body>
+    <div id="app" v-cloak>
+      <div class="container" @mousewheel="getMonth()">
+        <div class="now">
+          <p>
+            {{nowDate.year}}年{{nowDate.month+1}}月{{nowDate.date}}日
+          </p>
+          <h2>{{nowDate.hour}}:{{nowDate.minute}}:{{nowDate.second}}</h2>
+          <!-- <a href="#" @click.prevent="sidebarShow=true"
+            ><i class="fas fa-bars"></i
+          ></a> -->
+        </div>
+        <div class="calendar">
+          <div class="month">
+            <span>
+              <a href="#" @click="getYear(-1)" class="btn lastBtn"
+                ><i class="fas fa-chevron-up"></i
+              ></a>
+              {{calendar.year}}年
+              <a href="#" @click="getYear(1)" class="btn nextBtn"
+                ><i class="fas fa-chevron-down"></i
+              ></a>
+            </span>
+            <span>
+              <a href="#" @click="getMonth(-1)" class="btn lastBtn">
+                <i class="fas fa-chevron-up"></i> </a
+              >{{ calendar.month+1 }}月
+              <a href="#" @click="getMonth(1)" class="btn nextBtn"
+                ><i class="fas fa-chevron-down"></i></a
+            ></span>
+            <button @click="getDate">回到當月</button>
+          </div>
+          <ol class="week">
+            <li>週日</li>
+            <li>週一</li>
+            <li>週二</li>
+            <li>週三</li>
+            <li>週四</li>
+            <li>週五</li>
+            <li>週六</li>
+          </ol>
+          <div class="dateblock" v-for="i in 6">
+            <div
+              class="date list-group"
+              v-for="j in 7"
+              :class="{'today':date[(i-1)*7+j-1].date===nowDate.date && date[(i-1)*7+j-1].month===nowDate.month && date[(i-1)*7+j-1].year===nowDate.year,'thisMonth':date[(i-1)*7+j-1].month===calendar.month,'others':date[(i-1)*7+j-1].month!==calendar.month}"
+              @click.prevent="openEditModal(date[(i-1)*7+j-1],true)"
+            >
+              <span class="num">{{ date[(i-1)*7+j-1].date }}</span>
+              <div class="title">
+                <a
+                  href="#"
+                  class="item"
+                  v-for="(item,index) in date[(i-1)*7+j-1].todos"
+                  @click.stop.prevent="openEditModal(date[(i-1)*7+j-1],false,index)"
+                  >{{ item }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="editModal" v-if="editModalShow">
+        <div class="container">
+          <a href="#" class="closeBtn" @click.prevent="closeEditModal"
+            ><i class="fas fa-times"></i
+          ></a>
+          <input
+            type="text"
+            placeholder="新增待辦事項"
+            v-model="todo"
+            v-focus="true"
+            @keyup.enter="update"
+            @keyup.esc="closeEditModal"
+            class="inputTitle"
+          />
+          <input type="date" v-model="time" class="date" />
+          <div class="btn">
+            <a href="#" class="delBtn" @click.prevent="delTodo" v-if="delShow"
+              >刪除</a
+            >
+            <a href="#" class="submitBtn" @click.prevent="update">送出</a>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="sidebar" v-if="sidebarShow">
+        <div class="container">
+          <a href="#" class="closeBtn" @click.prevent="sidebarShow=false"
+            ><i class="fas fa-times"></i
+          ></a>
+          <h2>行事曆</h2>
+          <ul>
+            <li></li>
+          </ul>
+        </div>
+      </div> -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
+    <script src="./vue.js"></script>
+  </body>
+</html>
